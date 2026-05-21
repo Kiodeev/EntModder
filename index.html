@@ -1,162 +1,213 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <style>
-        :root { 
-            --neon: #00e5ff; 
-            --bg: rgba(15, 15, 20, 0.95);
-            --card: rgba(30, 30, 35, 0.6);
-        }
 
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: transparent; overflow: hidden; font-family: 'Segoe UI', Roboto, sans-serif; }
-        
-        /* Camada fantasma corrigida */
-        #overlay { position: fixed; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-        #fab, #menu { pointer-events: auto; }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-        /* FAB - Botão Flutuante com Pulso */
-        #fab { 
-            width: 58px; height: 58px; background: #000; 
-            border: 2px solid var(--neon); border-radius: 50%; 
-            position: fixed; top: 100px; left: 20px; 
-            display: flex; align-items: center; justify-content: center; 
-            color: white; font-size: 26px; font-weight: bold;
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
-            z-index: 999; animation: pulse 2s infinite; touch-action: none;
-        }
+<style>
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(0, 229, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
-        }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+-webkit-user-select:none;
+user-select:none;
+-webkit-touch-callout:none;
+font-family:sans-serif;
+}
 
-        /* Menu Moderno com Blur */
-        #menu { 
-            width: 300px; background: var(--bg); 
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 24px; 
-            position: fixed; top: 50%; left: 50%; 
-            transform: translate(-50%, -50%) scale(0.9); 
-            display: none; flex-direction: column; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8); z-index: 1000;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+body{
+overflow:hidden;
+background:transparent;
+}
 
-        .header { 
-            padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); 
-            display: flex; justify-content: space-between; align-items: center; 
-        }
-        .title { color: var(--neon); font-weight: 800; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; }
-        .close-btn { color: #ff3b30; font-size: 24px; font-weight: bold; cursor: pointer; }
+/* FAB */
 
-        .content { padding: 20px; }
+#fab{
 
-        /* Estilo dos Botões de Cheat */
-        .btn { 
-            background: var(--card); color: #efefef; border: 1px solid rgba(255,255,255,0.05); 
-            padding: 16px; margin-bottom: 12px; border-radius: 16px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            font-weight: 600; transition: 0.3s;
-        }
-        
-        .btn.active { 
-            background: rgba(0, 229, 255, 0.15); 
-            border-color: var(--neon);
-            color: #fff;
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
-        }
+position:fixed;
 
-        .toggle-track {
-            width: 40px; height: 20px; background: #333; border-radius: 20px; position: relative; transition: 0.3s;
-        }
-        .btn.active .toggle-track { background: var(--neon); }
-        .toggle-knob {
-            width: 16px; height: 16px; background: #fff; border-radius: 50%; 
-            position: absolute; top: 2px; left: 2px; transition: 0.3s;
-        }
-        .btn.active .toggle-knob { transform: translateX(20px); }
+left:20px;
+top:220px;
 
-        .footer { text-align: center; color: #666; font-size: 10px; padding-bottom: 15px; }
-    </style>
+width:60px;
+height:60px;
+
+border-radius:100%;
+
+background:#c8a84b;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+font-size:28px;
+color:white;
+
+z-index:99999;
+
+box-shadow:0 0 15px rgba(0,0,0,.45);
+
+}
+
+/* MENU */
+
+#menu{
+
+position:fixed;
+
+left:10px;
+right:10px;
+
+bottom:-500px;
+
+height:360px;
+
+background:#111;
+
+border-radius:20px 20px 0 0;
+
+transition:bottom .2s;
+
+padding:12px;
+
+overflow:auto;
+
+color:white;
+
+}
+
+#menu.show{
+bottom:0;
+}
+
+/* BUTTONS */
+
+.btn{
+
+background:#1d1d1d;
+
+padding:15px;
+
+border-radius:14px;
+
+margin-bottom:10px;
+
+font-size:15px;
+
+}
+
+.btn:active{
+transform:scale(.98);
+}
+
+</style>
 </head>
+
 <body>
-    <div id="overlay">
-        <div id="fab">❖</div>
-        <div id="menu">
-            <div class="header">
-                <span class="title">Wickler Private</span>
-                <span class="close-btn" onclick="toggleMenu()">×</span>
-            </div>
-            <div class="content" id="cheatList"></div>
-            <div class="footer">v2.0 Remote Injector • Reinicie após ativar</div>
-        </div>
-    </div>
 
-    <script>
-        const CONFIG = {
-            cheats: [
-                { id: "god", name: "God Mode Ultra", offset: "0x1a99a0", hex: "C0035FD6" },
-                { id: "wall", name: "Wallhack Vision", offset: "0x1b187c", hex: "C0035FD6" },
-                { id: "water", name: "Waterwalk Pro", offset: "0x1b0dfc", hex: "C0035FD6" }
-            ]
-        };
+<div id="fab">⚙</div>
 
-        const list = document.getElementById('cheatList');
-        
-        // Carrega estados salvos para o menu não "resetar" visualmente
-        const states = JSON.parse(localStorage.getItem('cheatStates') || '{}');
+<div id="menu">
 
-        CONFIG.cheats.forEach(cheat => {
-            const div = document.createElement('div');
-            div.className = `btn ${states[cheat.id] ? 'active' : ''}`;
-            div.innerHTML = `
-                <span>${cheat.name}</span>
-                <div class="toggle-track"><div class="toggle-knob"></div></div>
-            `;
-            
-            div.onclick = () => {
-                const isActive = div.classList.toggle('active');
-                states[cheat.id] = isActive;
-                localStorage.setItem('cheatStates', JSON.stringify(states));
-                
-                // Manda para o APK
-                if (window.Android) window.Android.runCheat(cheat.offset, cheat.hex);
-            };
-            list.appendChild(div);
-        });
+<div class="btn" onclick="tog('esp')">
+ESP
+</div>
 
-        const fab = document.getElementById('fab');
-        const menu = document.getElementById('menu');
-        let isDragging = false, startX, startY;
+<div class="btn" onclick="tog('admin')">
+ADMIN
+</div>
 
-        fab.ontouchstart = (e) => { 
-            isDragging = false; 
-            startX = e.touches[0].clientX - fab.offsetLeft;
-            startY = e.touches[0].clientY - fab.offsetTop;
-        };
-        fab.ontouchmove = (e) => { 
-            isDragging = true;
-            fab.style.left = (e.touches[0].clientX - startX) + 'px';
-            fab.style.top = (e.touches[0].clientY - startY) + 'px';
-        };
-        fab.onclick = () => { if (!isDragging) toggleMenu(); };
+<div class="btn" onclick="tog('rainbow')">
+RAINBOW
+</div>
 
-        function toggleMenu() {
-            const open = menu.style.display === 'flex';
-            if (!open) {
-                menu.style.display = 'flex';
-                setTimeout(() => { menu.style.transform = 'translate(-50%, -50%) scale(1)'; }, 10);
-                fab.style.display = 'none';
-            } else {
-                menu.style.transform = 'translate(-50%, -50%) scale(0.9)';
-                setTimeout(() => { 
-                    menu.style.display = 'none'; 
-                    fab.style.display = 'flex';
-                }, 200);
-            }
-        }
-    </script>
+<div class="btn" onclick="tog('bombs')">
+BOMBS
+</div>
+
+<div class="btn" onclick="tog('trail')">
+TRAIL
+</div>
+
+</div>
+
+<script>
+
+var fab=document.getElementById('fab');
+var menu=document.getElementById('menu');
+
+var drag=false;
+
+var moved=false;
+
+var ox=0;
+var oy=0;
+
+/* MENU */
+
+fab.onclick=function(){
+
+if(moved){
+moved=false;
+return;
+}
+
+if(menu.classList.contains('show')){
+menu.classList.remove('show');
+}else{
+menu.classList.add('show');
+}
+
+};
+
+/* TOGGLES */
+
+function tog(v){
+
+_gs2call('toggle',v);
+
+}
+
+/* DRAG */
+
+fab.addEventListener('touchstart',function(e){
+
+drag=true;
+
+ox=e.touches[0].clientX-fab.offsetLeft;
+oy=e.touches[0].clientY-fab.offsetTop;
+
+e.preventDefault();
+
+});
+
+document.addEventListener('touchmove',function(e){
+
+if(!drag)return;
+
+var x=e.touches[0].clientX-ox;
+var y=e.touches[0].clientY-oy;
+
+fab.style.left=x+'px';
+fab.style.top=y+'px';
+
+moved=true;
+
+});
+
+document.addEventListener('touchend',function(){
+
+drag=false;
+
+setTimeout(function(){
+moved=false;
+},100);
+
+});
+
+</script>
+
 </body>
 </html>
