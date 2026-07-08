@@ -1,213 +1,914 @@
-<!DOCTYPE html>
+//#CLIENTSIDE
+function onCreated() {
+  this.espPlayer = false;
+  this.espInsetos = false;
+  this.espLoot = false;
+  this.tpG = false;
+  this.tpL = false;
+  this.noclip = false;
+  this.god = false;
+  this.anti = false;
+  this.grudado = false;
+  this.inv = false;
+  this.loopHead = false;
+  this.loopShield = false;
+  this.loopBH = false;
+  this.copyClick = false;
+  this.copyLoop = false;
+  this.msgAtv = false;
+  this.alertaAtivo = false;
+  this.spawnAtv = false;
+  this.bombInf = false;
+  this.bombaAutoAtv = false;
+  this.flechaAtivo = false;
+  this.flechaQtd = 10;
+  this.flechaArea = 5;
+  this.emojiIdx = 0;
+  this.somAtivo = false;
+  this.tempoSom = 0;
+  this.loopGani = false;
+  this.ganiAtual = "";
+  this.ganisDisponiveis = {};
+  this.aniOriginal = player.ani;
+  this.idxHead = 1;
+  this.idxShield = 0;
+  this.idxBH = 1;
+  this.idxImg = 0;
+  this.tHead = 0;
+  this.tShield = 0;
+  this.tBH = 0;
+  this.tBomba = 0;
+  this.tMsg = 0;
+  this.tAlerta = 0;
+  this.velHead = 0.2;
+  this.velShield = 0.15;
+  this.spawnQtd = 20;
+  this.msgTxt = "";
+  this.alvo = NULL;
+  this.alvoNome = "";
+  this.cOrg = player.body;
+  this.hOrg = player.head;
+  this.nOrg = player.nick;
+  this.loopbody = "";
+  this.loophead = "";
+  this.loophat = "";
+  this.sOrg = player.shieldimg;
+  this.panelReady = false;
+
+  this.shields = {
+    "shields/001_shield.png", "shields/3eye-shield.gif", "shields/alien_shield.png",
+    "shields/antago-shield.png", "shields/beer-shield.png", "shields/boo-shield.png",
+    "shields/cjshield.png", "shields/dddd-shield.png", "shields/ella_shield.png",
+    "shields/ghost-shield.gif", "shields/hearts-shield.png", "shields/katana_shield.png",
+    "shields/leaf-shield.png", "shields/no-shield.png", "shields/ooo-shield.png",
+    "shields/redbull-shield.png", "shields/skshield.png", "shields/staff-shield.png", "shields/z-shield.png"
+  };
+
+  this.imagens = {
+    "classic_halloween15-balloonstand-black.png", "classic_halloween15-balloonstand-orange.png",
+    "classic_halloween15-balloonstand-purple.png", "classic_halloween15-bigpumpkin0.png",
+    "classic_halloween15-bigpumpkin1.png", "classic_halloween15-bigpumpkin2.png",
+    "classic_halloween15-bigpumpkin3.png", "classic_halloween15-bigpumpkin4.png",
+    "classic_halloween15-bigpumpkin5.png", "classic_halloween15-boneslide-rail.png",
+    "classic_halloween15-boneslide-ribs.png", "classic_halloween15-boneslide.png",
+    "classic_halloween15-bonethrone.png", "classic_halloween15-candygoblin.png",
+    "classic_halloween15-dirtmound.png", "classic_halloween15-glowingwindow.png",
+    "classic_halloween15-glowingwindow2.png", "classic_halloween15-leafpile.png",
+    "classic_halloween15-scarecrow.png", "classic_halloween15-taylorroof.png",
+    "classic_halloween15-tombstone3a.png", "classic_halloween15-torch.gif",
+    "classic_halloween15-treehutroof.png", "classic_halloween_modskeletons.png",
+    "classic_halloween_stackedpumpkins.png", "classic_halloween_stackedpumpkins2.png",
+    "classic_halloween_stream2.png", "classic_halloween_stream3.png", "classic_halloween_stream4.png",
+    "classic_halloween_window1.gif", "classic_halloweenbloodcup.png", "classic_halloweencandy1.png",
+    "classic_halloweencandy13.png", "classic_halloweencandy14.png", "classic_halloweencandy15.png",
+    "classic_halloweencandy16.png", "classic_halloweencandy17.png", "classic_halloweencandy18.png",
+    "classic_halloweencandy19.png", "classic_halloweencandy2.png", "classic_halloweencandy20.png",
+    "classic_halloweencandy22.png", "classic_halloweencandy24.png", "classic_halloweencandy27.png",
+    "classic_halloweencandy28.png", "classic_halloweencandy29.png", "classic_halloweencandy3.png",
+    "classic_halloweencandy30.png", "classic_halloweencandy31.png", "classic_halloweencandy34.png",
+    "classic_halloweencandy35.png", "classic_halloweencandy36.png", "classic_halloweencandy37.png",
+    "classic_halloweencandy39.png", "classic_halloweencandy4.png", "classic_halloweencandy5.png",
+    "classic_halloweencandy6.png", "classic_halloweencandy7.png", "classic_halloweencandy9.png",
+    "classic_hat_50kfblikes.png", "classic_house_red_corners.png", "classic_icon_vip.png",
+    "classic_insidetreetop_green.png", "classic_insidetreetop_yellow.png", "classic_jlant1.png",
+    "classic_jlant2.png", "classic_jlant3.png", "classic_jlant4.png", "classic_jukebox.gif",
+    "classic_jumprope_icon.png", "classic_keyblock.png", "classic_lantern-icon.png",
+    "classic_lavabubble.png", "classic_lightorb.png", "classic_limitwarpdoor2.gif",
+    "classic_mayortophat.png", "classic_minichurch.png", "classic_minilamp.gif",
+    "classic_modfort_stairs.png", "classic_new_dagger.png", "classic_newdoor0.png",
+    "classic_newdoubledoor0.png", "classic_newumbrella-plainblack.png", "classic_nexusj_flooring.png",
+    "classic_nexussign-1.png", "classic_nexusww_cactus1.png", "classic_nexusww_cactus2.png",
+    "classic_nexusww_cactus3.png", "classic_nexusww_cowskull.png", "classic_nexusww_outdoorchair.png"
+  };
+
+  this.emojis = {
+    "e_u1f60a.png", "e_u1f60b.png", "e_u1f60d.png", "e_u1f60e.png", "e_u1f60f.png",
+    "e_u1f61a.png", "e_u1f61b.png", "e_u1f61c.png", "e_u1f61d.png", "e_u1f61e.png",
+    "e_u1f62a.png", "e_u1f62b.png", "e_u1f62c.png", "e_u1f62d.png", "e_u1f62e.png",
+    "e_u1f63a.png", "e_u1f346.png"
+  };
+
+  openMenu();
+  atualizarGanis();
+  setTimer(0.05);
+}
+
+function openMenu() {
+  this.panelReady = false;
+
+  setpanelhtml(this, "<!DOCTYPE html>
 <html>
 <head>
-
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
--webkit-user-select:none;
-user-select:none;
--webkit-touch-callout:none;
-font-family:sans-serif;
-}
-
-body{
-overflow:hidden;
-background:transparent;
-}
-
-/* FAB */
-
-#fab{
-
-position:fixed;
-
-left:20px;
-top:220px;
-
-width:60px;
-height:60px;
-
-border-radius:100%;
-
-background:#c8a84b;
-
-display:flex;
-align-items:center;
-justify-content:center;
-
-font-size:28px;
-color:white;
-
-z-index:99999;
-
-box-shadow:0 0 15px rgba(0,0,0,.45);
-
-}
-
-/* MENU */
-
-#menu{
-
-position:fixed;
-
-left:10px;
-right:10px;
-
-bottom:-500px;
-
-height:360px;
-
-background:#111;
-
-border-radius:20px 20px 0 0;
-
-transition:bottom .2s;
-
-padding:12px;
-
-overflow:auto;
-
-color:white;
-
-}
-
-#menu.show{
-bottom:0;
-}
-
-/* BUTTONS */
-
-.btn{
-
-background:#1d1d1d;
-
-padding:15px;
-
-border-radius:14px;
-
-margin-bottom:10px;
-
-font-size:15px;
-
-}
-
-.btn:active{
-transform:scale(.98);
-}
-
+*{margin:0;padding:0;box-sizing:border-box;user-select:none;font-family:'Segoe UI',Arial,sans-serif}
+html,body{width:100%;height:100%;overflow:hidden;background:transparent}
+body{color:white}
+#floatBtn{position:fixed;top:100px;left:100px;width:46px;height:46px;border-radius:50%;cursor:pointer;z-index:99999;background:linear-gradient(145deg,#c084fc,#00002);box-shadow:0 0 22px #a855f7;display:flex;align-items:center;justify-content:center;transition:transform .12s ease}
+#floatBtn:hover{transform:scale(1.06)}
+#floatBtn::before{content:'✦';color:white;font-size:24px;font-weight:bold;text-shadow:0 0 12px #c084fc}
+#menu{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.83);width:100vw;max-width:620px;height:100vh;max-height:400px;border-radius:40px;overflow:hidden;background:rgba(15,10,30,.96);opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease;z-index:9999;border:1px solid rgba(168,85,247,.4);box-shadow:0 10px 40px rgba(0,0,0,.7)}
+#menu.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(.95)}
+.menu-bg{position:absolute;inset:0;background:linear-gradient(160deg,rgba(20,10,40,.95),rgba(30,5,50,.98))}
+.menu-content{position:relative;z-index:2;width:100%;height:100%;padding:14px;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(168,85,247,.3)}
+.logo-wrapper{display:flex;align-items:center;gap:12px}
+.logo-icon{width:40px;height:40px;border-radius:50%;background:url('https://photos.xgroovy.com/contents/albums/main/420x999/1031000/1031780/1384752.jpg') center/cover;border:2px solid #a855f7;box-shadow:0 0 10px #a855f7}
+.logo-text{font-size:18px;font-weight:700;letter-spacing:2px;background:linear-gradient(to right,#c084fc,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 10px #a855f7}
+.close{width:28px;height:28px;border:none;border-radius:50%;background:rgba(255,255,255,.06);color:#aaa;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+.close:hover{background:#ef4444;color:white;box-shadow:0 0 10px #ef4444}
+.window-body{flex:1;min-height:0;margin-top:8px;display:grid;grid-template-columns:180px 1fr;gap:10px}
+.side-nav{min-height:0;border-radius:12px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);padding:10px;display:flex;flex-direction:column;gap:8px}
+.nav-copy h2{font-size:10px;color:#c084fc;text-transform:uppercase}
+.nav-copy p{margin-top:4px;color:#888;font-size:7px}
+.nav-list{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:4px;padding-right:2px}
+.nav-list::-webkit-scrollbar{width:3px}
+.nav-list::-webkit-scrollbar-thumb{background:linear-gradient(#c084fc,#a855f7);border-radius:999px}
+.nav-button{width:100%;border:none;border-radius:8px;padding:8px 10px;text-align:left;color:#ccc;font-size:9px;font-weight:600;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.04);transition:.15s}
+.nav-button:hover,.nav-button.active{color:white;background:rgba(168,85,247,.15);border-color:rgba(168,85,247,.4);box-shadow:0 0 8px rgba(168,85,247,.2)}
+.discord-btn{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:4px;padding:6px 10px;border-radius:8px;background:rgba(88,101,242,.15);border:1px solid #5865F2;color:white;text-decoration:none;font-size:9px;font-weight:bold;transition:.2s}
+.discord-btn:hover{background:#5865F2;box-shadow:0 0 12px #5865F2}
+.discord-btn svg{width:14px;height:14px;fill:white}
+.main-panel{min-width:0;min-height:0;display:flex;flex-direction:column}
+.profile{display:flex;align-items:center;gap:8px}
+.avatar-sm{width:34px;height:34px;border-radius:50%;background:url('https://photos.xgroovy.com/contents/albums/main/420x999/1031000/1031268/1383687.jpg') center/cover;border:2px solid #a855f7;box-shadow:0 0 8px #a855f7}
+.info h2{color:white;font-size:11px}
+.info p{color:#aaa;font-size:7px;margin-top:2px}
+.line{height:1px;margin:8px 0;background:linear-gradient(90deg,#c084fc,#a855f7,#06b6d4);box-shadow:0 0 6px rgba(168,85,247,.4)}
+.section-title{margin-bottom:8px}
+.section-chip{display:inline-block;padding:3px 8px;border-radius:999px;color:white;font-size:7px;font-weight:700;background:rgba(168,85,247,.3);border:1px solid rgba(168,85,247,.4)}
+.section-title h2{margin-top:4px;color:white;font-size:13px;font-weight:600}
+.section-title p{margin-top:2px;color:#aaa;font-size:8px}
+.cards-scroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding-right:2px}
+.cards-scroll::-webkit-scrollbar{width:3px}
+.cards-scroll::-webkit-scrollbar-thumb{background:linear-gradient(#c084fc,#a855f7);border-radius:999px}
+.cards{display:flex;flex-direction:column;gap:8px}
+.card{padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.06)}
+.card h3{color:#e0e0e0;font-size:10px;margin-bottom:2px}
+.card p{color:#999;font-size:8px;line-height:1.2}
+.list-box{display:flex;flex-direction:column;gap:4px;max-height:100px;overflow-y:auto;padding-right:2px}
+.list-row{width:100%;padding:5px 8px;border:1px solid rgba(255,255,255,.06);border-radius:6px;background:rgba(255,255,255,.04);color:#ccc;font-size:9px;text-align:left;cursor:pointer;transition:.15s}
+.list-row.active,.list-row:hover{background:rgba(168,85,247,.2);border-color:rgba(168,85,247,.5);color:white}
+.control-stack{display:flex;flex-direction:column;gap:6px}
+.switch-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.switch-toggle{position:relative;width:36px;height:20px;cursor:pointer}
+.switch-toggle input{position:absolute;opacity:0}
+.switch-slider{position:absolute;inset:0;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);transition:.2s}
+.switch-slider::before{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#ccc;transition:.2s}
+.switch-toggle input:checked+.switch-slider{background:rgba(168,85,247,.3);border-color:rgba(168,85,247,.5)}
+.switch-toggle input:checked+.switch-slider::before{transform:translateX(16px);background:#c084fc;box-shadow:0 0 6px #c084fc}
+.menu-input{width:100%;padding:7px 8px;border:none;border-radius:8px;outline:none;color:white;font-size:9px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.06)}
+.menu-input:focus{border-color:#a855f7}
+.menu-button{border:none;border-radius:8px;padding:7px 10px;color:white;font-size:9px;font-weight:bold;cursor:pointer;background:linear-gradient(135deg,rgba(168,85,247,.4),rgba(6,182,212,.3));transition:.2s}
+.menu-button:hover{background:linear-gradient(135deg,rgba(168,85,247,.6),rgba(6,182,212,.5));box-shadow:0 0 10px rgba(168,85,247,.4)}
+.button-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.status-line{padding:6px 7px;border-radius:6px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.04);color:#aaa;font-size:8px;font-family:monospace}
+.footer{margin-top:6px;display:flex;justify-content:space-between;align-items:center;color:#666;font-size:7px}
+.fps{color:#06b6d4;font-size:8px;font-family:monospace}
 </style>
 </head>
-
 <body>
-
-<div id="fab">⚙</div>
-
-<div id="menu">
-
-<div class="btn" onclick="tog('esp')">
-ESP
+<div id='floatBtn' title='Abrir/Fechar'></div>
+<div id='menu'>
+  <div class='menu-bg'></div>
+  <div class='menu-content'>
+    <div class='top'>
+      <div class='logo-wrapper'>
+        <div class='logo-icon'></div>
+        <div class='logo-text'>ENTWICKLER</div>
+      </div>
+      <button class='close' id='closeBtn'>✕</button>
+    </div>
+    <div class='window-body'>
+      <aside class='side-nav'>
+        <div class='nav-copy'>
+          <h2>Modulos</h2>
+          <p>Build v3.0</p>
+        </div>
+        <div class='nav-list' id='navList'></div>
+        <a class='discord-btn' href='https://discord.gg/4tw7kE7rxU' target='_blank'>
+          <svg viewBox='0 0 24 24'><path d='M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z'/></svg>
+          Discord
+        </a>
+      </aside>
+      <div class='main-panel'>
+        <div class='profile'>
+          <div class='avatar-sm'></div>
+          <div class='info'>
+            <h2>Entwickler</h2>
+            <p>Engine injetada com sucesso.</p>
+          </div>
+        </div>
+        <div class='line'></div>
+        <div class='section-title'>
+          <span class='section-chip' id='sectionChip'>ESP</span>
+          <h2 id='sectionTitle'>Entity ESP</h2>
+          <p id='sectionDesc'>Rastreamento em tempo real.</p>
+        </div>
+        <div class='cards-scroll'>
+          <div class='cards' id='cards'></div>
+        </div>
+        <div class='footer'>
+          <span>by Entwickler</span>
+          <span class='fps' id='fpsCounter'>FPS: --</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-
-<div class="btn" onclick="tog('admin')">
-ADMIN
-</div>
-
-<div class="btn" onclick="tog('rainbow')">
-RAINBOW
-</div>
-
-<div class="btn" onclick="tog('bombs')">
-BOMBS
-</div>
-
-<div class="btn" onclick="tog('trail')">
-TRAIL
-</div>
-
-</div>
-
 <script>
+const floatBtn = document.getElementById('floatBtn');
+const menu = document.getElementById('menu');
+const closeBtn = document.getElementById('closeBtn');
+const navList = document.getElementById('navList');
+const cards = document.getElementById('cards');
+const sectionChip = document.getElementById('sectionChip');
+const sectionTitle = document.getElementById('sectionTitle');
+const sectionDesc = document.getElementById('sectionDesc');
+const fpsEl = document.getElementById('fpsCounter');
 
-var fab=document.getElementById('fab');
-var menu=document.getElementById('menu');
+// Arrasto que funciona (usa offsetLeft/Top, nunca desaparece)
+let isDragging = false;
+let hasMoved = false;
+let startX = 0, startY = 0, startLeft = 0, startTop = 0;
 
-var drag=false;
+floatBtn.style.left = '100px';
+floatBtn.style.top = '100px';
 
-var moved=false;
-
-var ox=0;
-var oy=0;
-
-/* MENU */
-
-fab.onclick=function(){
-
-if(moved){
-moved=false;
-return;
-}
-
-if(menu.classList.contains('show')){
-menu.classList.remove('show');
-}else{
-menu.classList.add('show');
-}
-
-};
-
-/* TOGGLES */
-
-function tog(v){
-
-_gs2call('toggle',v);
-
-}
-
-/* DRAG */
-
-fab.addEventListener('touchstart',function(e){
-
-drag=true;
-
-ox=e.touches[0].clientX-fab.offsetLeft;
-oy=e.touches[0].clientY-fab.offsetTop;
-
-e.preventDefault();
-
+floatBtn.addEventListener('mousedown', function(e) {
+  isDragging = true;
+  hasMoved = false;
+  startX = e.clientX;
+  startY = e.clientY;
+  startLeft = floatBtn.offsetLeft;
+  startTop = floatBtn.offsetTop;
+  floatBtn.style.transition = 'none';
 });
 
-document.addEventListener('touchmove',function(e){
+floatBtn.addEventListener('touchstart', function(e) {
+  isDragging = true;
+  hasMoved = false;
+  startX = e.touches[0].clientX;
+  startY = e.touches[0].clientY;
+  startLeft = floatBtn.offsetLeft;
+  startTop = floatBtn.offsetTop;
+  floatBtn.style.transition = 'none';
+}, { passive: false });
 
-if(!drag)return;
-
-var x=e.touches[0].clientX-ox;
-var y=e.touches[0].clientY-oy;
-
-fab.style.left=x+'px';
-fab.style.top=y+'px';
-
-moved=true;
-
+document.addEventListener('mousemove', function(e) {
+  if (!isDragging) return;
+  const dx = e.clientX - startX;
+  const dy = e.clientY - startY;
+  if (Math.abs(dx) > 2 || Math.abs(dy) > 2) hasMoved = true;
+  floatBtn.style.left = (startLeft + dx) + 'px';
+  floatBtn.style.top = (startTop + dy) + 'px';
 });
 
-document.addEventListener('touchend',function(){
+document.addEventListener('touchmove', function(e) {
+  if (!isDragging) return;
+  const dx = e.touches[0].clientX - startX;
+  const dy = e.touches[0].clientY - startY;
+  if (Math.abs(dx) > 2 || Math.abs(dy) > 2) hasMoved = true;
+  floatBtn.style.left = (startLeft + dx) + 'px';
+  floatBtn.style.top = (startTop + dy) + 'px';
+}, { passive: false });
 
-drag=false;
+function stopDrag() {
+  if (!isDragging) return;
+  isDragging = false;
+  if (!hasMoved) toggleMenu();
+}
 
-setTimeout(function(){
-moved=false;
-},100);
+document.addEventListener('mouseup', stopDrag);
+document.addEventListener('touchend', stopDrag);
 
+// FPS Counter
+let fps = 0, frames = 0, lastTime = performance.now();
+(function fpsLoop() {
+  frames++;
+  const now = performance.now();
+  if (now - lastTime >= 1000) {
+    fps = frames;
+    frames = 0;
+    lastTime = now;
+    fpsEl.textContent = 'FPS: ' + fps;
+  }
+  requestAnimationFrame(fpsLoop);
+})();
+
+// Menu
+function openMenu() { menu.classList.add('open'); floatBtn.style.display = 'none'; }
+function closeMenu() { menu.classList.remove('open'); floatBtn.style.display = 'flex'; }
+function toggleMenu() { menu.classList.contains('open') ? closeMenu() : openMenu(); }
+closeBtn.addEventListener('click', function(e) { e.stopPropagation(); closeMenu(); });
+
+// Seções e controles (mantidos originais)
+const sections = [
+  { id: 'esp', label: 'ESP', title: 'ESP', description: 'Visual para players, insetos e loot.' },
+  { id: 'tp', label: 'TP', title: 'Teleportes', description: 'Teleportes rapidos.' },
+  { id: 'personagem', label: 'PERSONAGEM', title: 'Personagem', description: 'Loops e copy.' },
+  { id: 'hack', label: 'HACK', title: 'Hack', description: 'Noclip, god, etc.' },
+  { id: 'alerta', label: 'ALERTA', title: 'Alerta', description: 'Spam de mensagem.' },
+  { id: 'efeitos', label: 'EFEITOS', title: 'Efeitos', description: 'Bombas e flechas.' },
+  { id: 'emoji', label: 'EMOJI', title: 'Emoji', description: 'Controle de emotes.' },
+  { id: 'spawn', label: 'SPAWN', title: 'Spawn', description: 'Lancador de imagens.' },
+  { id: 'ganis', label: 'GANIS', title: 'Ganis', description: 'Lista de ganis.' }
+];
+
+const controls = {};
+const panelState = { toggle: {}, value: {}, text: {}, image: {}, ganiList: [], ganiSelected: '' };
+let activeSection = 'esp';
+
+function sanitizeValue(value) { return String(value == null ? '' : value).split('|').join('/'); }
+function sendEvent(kind, id, value) {
+  const parts = [kind, id];
+  if (value != null) parts.push(sanitizeValue(value));
+  if (typeof _gs2call === 'function') _gs2call(parts.join('|'));
+}
+
+function clearControls() { cards.innerHTML = ''; for (const key in controls) delete controls[key]; }
+
+function createCopyBlock(title, description) {
+  const wrapper = document.createElement('div'); wrapper.className = 'card-copy';
+  const heading = document.createElement('h3'); heading.textContent = title; wrapper.appendChild(heading);
+  if (description) { const text = document.createElement('p'); text.textContent = description; wrapper.appendChild(text); }
+  return { wrapper, heading };
+}
+
+function createCard(title, description) {
+  const card = document.createElement('div'); card.className = 'card';
+  const content = document.createElement('div'); content.className = 'control-stack';
+  const copy = createCopyBlock(title, description || ''); content.appendChild(copy.wrapper);
+  card.appendChild(content); cards.appendChild(card);
+  return { card, content, copy };
+}
+
+function registerControl(id, control) {
+  controls[id] = control;
+  if (control.kind === 'toggle' && id in panelState.toggle) control.setValue(panelState.toggle[id]);
+  if (control.kind === 'value' && id in panelState.value) control.setValue(panelState.value[id]);
+  if (control.kind === 'text' && id in panelState.text) control.setValue(panelState.text[id]);
+  if (control.kind === 'image' && id in panelState.image) control.setValue(panelState.image[id]);
+  if (control.kind === 'list') { control.clear(); panelState.ganiList.forEach(i => control.addItem(i)); control.select(panelState.ganiSelected); }
+  return control;
+}
+
+function addSwitchControl(id, title, description, eventId) {
+  const card = document.createElement('div'); card.className = 'card';
+  const row = document.createElement('div'); row.className = 'switch-row';
+  const copy = createCopyBlock(title, description || '');
+  const toggle = document.createElement('label'); toggle.className = 'switch-toggle';
+  const input = document.createElement('input'); input.type = 'checkbox';
+  const slider = document.createElement('span'); slider.className = 'switch-slider';
+  toggle.appendChild(input); toggle.appendChild(slider);
+  row.appendChild(copy.wrapper); row.appendChild(toggle);
+  card.appendChild(row); cards.appendChild(card);
+  input.addEventListener('change', () => sendEvent('toggle', eventId));
+  return registerControl(id, { kind: 'toggle', setValue: (v) => { input.checked = Boolean(v); } });
+}
+
+function addInputControl(id, title, description, placeholder, eventId) {
+  const base = createCard(title, description || '');
+  const input = document.createElement('input'); input.type = 'text'; input.className = 'menu-input'; input.placeholder = placeholder || '';
+  input.addEventListener('input', () => sendEvent('input', eventId, input.value));
+  base.content.appendChild(input);
+  return registerControl(id, { kind: 'value', setValue: (v) => { input.value = v == null ? '' : String(v); } });
+}
+
+function addButtonControl(title, description, label, eventId, secondary) {
+  const base = createCard(title, description || '');
+  const button = document.createElement('button'); button.type = 'button';
+  button.className = secondary ? 'menu-button secondary' : 'menu-button';
+  button.textContent = label;
+  button.addEventListener('click', () => sendEvent('button', eventId));
+  base.content.appendChild(button);
+  return button;
+}
+
+function addButtonRow(title, description, buttons) {
+  const base = createCard(title, description || '');
+  const row = document.createElement('div'); row.className = 'button-row';
+  buttons.forEach(item => {
+    const button = document.createElement('button'); button.type = 'button';
+    button.className = item.secondary ? 'menu-button secondary' : 'menu-button';
+    button.textContent = item.label;
+    button.addEventListener('click', () => sendEvent('button', item.eventId));
+    row.appendChild(button);
+  });
+  base.content.appendChild(row);
+}
+
+function addTextControl(id, title, description) {
+  const base = createCard(title, description || '');
+  const line = document.createElement('div'); line.className = 'status-line'; line.textContent = 'Aguardando...';
+  base.content.appendChild(line);
+  return registerControl(id, { kind: 'text', setValue: (v) => { line.textContent = v == null ? '' : String(v); } });
+}
+
+function addPreviewControl(id, title, description) {
+  const base = createCard(title, description || '');
+  const frame = document.createElement('div'); frame.className = 'preview-frame';
+  const image = document.createElement('img'); image.className = 'preview-thumb'; image.alt = 'preview';
+  const meta = document.createElement('div'); meta.className = 'preview-meta';
+  meta.innerHTML = '<strong>Arquivo atual</strong><span>Sem item.</span>';
+  frame.appendChild(image); frame.appendChild(meta);
+  base.content.appendChild(frame);
+  return registerControl(id, { kind: 'image', setValue: (v) => { image.src = v || ''; meta.querySelector('span').textContent = v || ''; } });
+}
+
+function addListControl(id, title, description, eventId) {
+  const base = createCard(title, description || '');
+  const box = document.createElement('div'); box.className = 'list-box';
+  base.content.appendChild(box);
+  return registerControl(id, {
+    kind: 'list',
+    clear: () => { box.innerHTML = ''; },
+    addItem: (text) => {
+      const row = document.createElement('button'); row.type = 'button'; row.className = 'list-row';
+      row.textContent = text; row.dataset.value = text;
+      row.addEventListener('click', () => sendEvent('select', eventId, text));
+      box.appendChild(row);
+    },
+    select: (selected) => {
+      box.querySelectorAll('.list-row').forEach(r => r.classList.toggle('active', r.dataset.value === selected));
+    }
+  });
+}
+
+// Builders
+function buildEspSection() {
+  addSwitchControl('espPlayer', 'ESP Player + Admin', 'Alerta staff.', 'espPlayer');
+  addSwitchControl('espInsetos', 'ESP Insetos', 'Insetos proximos.', 'espInsetos');
+  addSwitchControl('espLoot', 'ESP Loot', 'Baus e loot.', 'espLoot');
+}
+function buildTpSection() {
+  addSwitchControl('tpG', 'TP Gralats', 'Auto TP.', 'tpG');
+  addButtonRow('Teleportes Rapidos', 'Rotas usadas.', [
+    { label: 'TP Loot', eventId: 'tpLoot' }, { label: 'Graal City', eventId: 'tpCity' }
+  ]);
+}
+function buildPersonagemSection() {
+  addSwitchControl('copyClick', 'Copy Click', 'Copia visual.', 'copyClick');
+  addSwitchControl('copyLoop', 'Copy Loop', 'Mantem copia.', 'copyLoop');
+  addSwitchControl('loopBH', 'Body + Head Loop', 'Alterna body/head.', 'loopBH');
+  addSwitchControl('loopHead', 'Head Loop', 'Loop de heads.', 'loopHead');
+  addInputControl('HSpeed', 'Velocidade Head', 'Segundos.', '0.2', 'HSpeed');
+  addSwitchControl('loopShield', 'Shield Loop', 'Loop de shields.', 'loopShield');
+  addInputControl('SSpeed', 'Velocidade Shield', 'Segundos.', '0.15', 'SSpeed');
+  addTextControl('StatHead', 'Status Head', 'Progresso.');
+  addTextControl('StatShield', 'Status Shield', 'Progresso.');
+}
+function buildHackSection() {
+  addSwitchControl('inv', 'Invisivel', 'Esconde player.', 'inv');
+  addSwitchControl('noclip', 'Noclip + Speed', 'Anda pelas paredes.', 'noclip');
+  addSwitchControl('god', 'God Mode', 'Vida infinita.', 'god');
+  addSwitchControl('anti', 'Anti Report', 'Gani de arco.', 'anti');
+  addButtonRow('Grudar', 'Prende em player.', [
+    { label: 'Grudar', eventId: 'grudar' }, { label: 'Desgrudar', eventId: 'desgrudar', secondary: true }
+  ]);
+  addTextControl('StatGrudar', 'Status Grudar', 'Estado.');
+}
+function buildAlertaSection() {
+  addInputControl('MsgInput', 'Mensagem', 'Texto spam.', 'Mensagem...', 'MsgInput');
+  addSwitchControl('msgAtv', 'Spam Ativo', 'Loop mensagem.', 'msgAtv');
+  addSwitchControl('alertaAtivo', 'Alerta Gani', 'Gani buzzer.', 'alertaAtivo');
+  addTextControl('StatusAlerta', 'Status Alerta', 'Estado.');
+}
+function buildEfeitosSection() {
+  addSwitchControl('bombInf', 'Bomba Infinita', '99 bombas.', 'bombInf');
+  addSwitchControl('bombaAutoAtv', 'Bomba Auto', 'Explosoes.', 'bombaAutoAtv');
+  addInputControl('FlechaQtd', 'Qtd Flechas', 'Volume.', '10', 'FlechaQtd');
+  addInputControl('FlechaArea', 'Area Flechas', 'Raio.', '5', 'FlechaArea');
+  addSwitchControl('flechaAtivo', 'Arrow Rain', 'Chuva flechas.', 'flechaAtivo');
+  addButtonControl('Disparo Unico', 'Atira uma vez.', 'Executar', 'spawnClick', false);
+}
+function buildEmojiSection() {
+  addButtonControl('Emote Principal', 'Emote especial.', 'Usar Emote', 'emojiMain', false);
+  addButtonRow('Selecionar Emoji', 'Navegue.', [
+    { label: 'Anterior', eventId: 'emojiPrev' }, { label: 'Proximo', eventId: 'emojiNext' }
+  ]);
+  addPreviewControl('PreviewEmoji', 'Preview');
+  addTextControl('NomeEmoji', 'Arquivo Emoji');
+  addButtonControl('Testar Emoji', 'Dispara.', 'Testar', 'emojiTest', false);
+}
+function buildSpawnSection() {
+  addTextControl('NomeImg', 'Imagem Atual');
+  addButtonRow('Selecionar Imagem', 'Navegue.', [
+    { label: 'Anterior', eventId: 'imgPrev' }, { label: 'Proxima', eventId: 'imgNext' }
+  ]);
+  addInputControl('QtdInput', 'Quantidade', 'Por clique.', '20', 'QtdInput');
+  addSwitchControl('spawnAtv', 'Lancador', 'Ativa spawn.', 'spawnAtv');
+  addTextControl('StatSpawn', 'Status Spawn');
+}
+function buildGanisSection() {
+  addListControl('ListaGani', 'Lista de Ganis', 'Selecione.', 'gani');
+  addSwitchControl('loopGani', 'Loop Gani', 'Reaplica.', 'loopGani');
+  addButtonRow('Controle', 'Atualiza/reseta.', [
+    { label: 'Atualizar', eventId: 'ganisRefresh' }, { label: 'Voltar Normal', eventId: 'ganiReset', secondary: true }
+  ]);
+  addTextControl('StatusGani', 'Status Gani');
+}
+
+const builders = { esp: buildEspSection, tp: buildTpSection, personagem: buildPersonagemSection, hack: buildHackSection, alerta: buildAlertaSection, efeitos: buildEfeitosSection, emoji: buildEmojiSection, spawn: buildSpawnSection, ganis: buildGanisSection };
+
+function renderSection(sectionId) {
+  activeSection = sectionId;
+  clearControls();
+  const info = sections.find(s => s.id === sectionId);
+  if (info) {
+    sectionChip.textContent = info.label;
+    sectionTitle.textContent = info.title;
+    sectionDesc.textContent = info.description;
+  }
+  if (builders[sectionId]) builders[sectionId]();
+  updateNavigation();
+}
+
+function buildNavigation() {
+  navList.innerHTML = '';
+  sections.forEach(s => {
+    const button = document.createElement('button'); button.type = 'button';
+    button.className = 'nav-button'; button.textContent = s.label; button.dataset.section = s.id;
+    button.addEventListener('click', () => renderSection(s.id));
+    navList.appendChild(button);
+  });
+}
+
+function updateNavigation() {
+  navList.querySelectorAll('.nav-button').forEach(b => b.classList.toggle('active', b.dataset.section === activeSection));
+}
+
+function parseData(raw) {
+  const text = String(raw == null ? '' : raw);
+  const splitAt = text.indexOf('|');
+  return splitAt === -1 ? { id: text, value: '' } : { id: text.slice(0, splitAt), value: text.slice(splitAt + 1) };
+}
+
+function handleToggleEvent(data) { const p = parseData(data); panelState.toggle[p.id] = p.value === '1'; if (controls[p.id]?.setValue) controls[p.id].setValue(panelState.toggle[p.id]); }
+function handleValueEvent(data) { const p = parseData(data); panelState.value[p.id] = p.value; if (controls[p.id]?.setValue) controls[p.id].setValue(p.value); }
+function handleTextEvent(data) { const p = parseData(data); panelState.text[p.id] = p.value; if (controls[p.id]?.setValue) controls[p.id].setValue(p.value); }
+function handleImageEvent(data) { const p = parseData(data); panelState.image[p.id] = p.value; if (controls[p.id]?.setValue) controls[p.id].setValue(p.value); }
+
+window.addEventListener('gs2event', function(event) {
+  const detail = event.detail || {};
+  if (detail.name === 'toggle') handleToggleEvent(detail.data);
+  if (detail.name === 'value') handleValueEvent(detail.data);
+  if (detail.name === 'text') handleTextEvent(detail.data);
+  if (detail.name === 'image') handleImageEvent(detail.data);
+  if (detail.name === 'ganiClear') { panelState.ganiList = []; if (controls.ListaGani) controls.ListaGani.clear(); }
+  if (detail.name === 'ganiAdd') { panelState.ganiList.push(detail.data); if (controls.ListaGani) controls.ListaGani.addItem(detail.data); }
+  if (detail.name === 'ganiSelected') { panelState.ganiSelected = detail.data; if (controls.ListaGani) controls.ListaGani.select(detail.data); }
 });
 
+buildNavigation();
+renderSection('esp');
+sendEvent('system', 'ready');
 </script>
-
 </body>
-</html>
+</html>");
+
+  showpanel(this, "onMenu");
+}
+
+// As funções GS2 abaixo permanecem EXATAMENTE como você já tinha.
+function isAdmin(p) {
+  return p.alpha < 0.99 || p.zoom == 0 || (p.bodyimg == "" && p.headimg == "") || p.attr[30] == "invisible" || (p.nick == "" && p.bodyimg == "body.png");
+}
+
+function DrawLine(i, sx, sy, tx, ty, w, r, g, b, a) {
+  ang = getangle(tx - sx, ty - sy) + pi / 2;
+  with (findimg(i)) {
+    polygon = {sx, sy, tx, ty, tx + cos(ang) * w, ty - sin(ang) * w, sx + cos(ang) * w, sy - sin(ang) * w};
+    red = r; green = g; blue = b; alpha = a;
+    layer = 3;
+  }
+}
+
+function tpCity() {
+  (@ "-Games").sendToServer("tutorialaddbonus");
+  (@ "-Games").sendToServer("startwarp");
+}
+
+function criarExplosao(x, y) {
+  putexplosion2(5, 8, x, y);
+  for (temp.a = 0; temp.a < 360; temp.a += 30) {
+    temp.r = temp.a * 0.01745;
+    putexplosion2(4, 5, x + cos(temp.r) * 5, y + sin(temp.r) * 5);
+    putexplosion2(3, 4, x + cos(temp.r) * 10, y + sin(temp.r) * 10);
+  }
+  for (temp.i = 0; temp.i < 20; temp.i++) {
+    putexplosion2(3, 4, x + random(-12, 12), y + random(-12, 12));
+  }
+  for (temp.p : players) {
+    if (temp.p != player && ((temp.p.x - x)^2 + (temp.p.y - y)^2)^0.5 < 15) {
+      temp.p.hearts -= 15;
+    }
+  }
+}
+
+function panelToggle(controlId, value) {
+  if (!this.panelReady) return;
+  sendpanelevent(this, "toggle", controlId @ "|" @ (value ? 1 : 0));
+}
+
+function panelValue(controlId, value) {
+  if (!this.panelReady) return;
+  sendpanelevent(this, "value", controlId @ "|" @ value);
+}
+
+function panelText(controlId, value) {
+  if (!this.panelReady) return;
+  sendpanelevent(this, "text", controlId @ "|" @ value);
+}
+
+function panelImage(controlId, value) {
+  if (!this.panelReady) return;
+  sendpanelevent(this, "image", controlId @ "|" @ value);
+}
+
+function getHeadStatus() {
+  return "HEAD: " @ this.idxHead @ "/30";
+}
+
+function getShieldStatus() {
+  return "SHIELD: " @ this.idxShield @ "/" @ this.shields.size();
+}
+
+function getGrudarStatus() {
+  if (this.grudado && this.alvoNome != "") {
+    return "STATUS: GRUDADO EM " @ this.alvoNome;
+  }
+  return "STATUS: NAO GRUDADO";
+}
+
+function getAlertaStatus() {
+  if (this.alertaAtivo) {
+    return "STATUS: ALERTA ATIVO";
+  }
+  return "STATUS: PARADO";
+}
+
+function getSpawnStatus() {
+  if (this.spawnAtv) {
+    return "Ativo: clique no mapa para lancar.";
+  }
+  return "Ative e clique no mapa.";
+}
+
+function getGaniStatus() {
+  if (this.ganiAtual == "") {
+    return "Nenhum gani selecionado.";
+  }
+  return "Gani atual: " @ this.ganiAtual;
+}
+
+function refreshPanel() {
+  if (!this.panelReady) return;
+
+  panelToggle("espPlayer", this.espPlayer);
+  panelToggle("espInsetos", this.espInsetos);
+  panelToggle("espLoot", this.espLoot);
+
+  panelToggle("tpG", this.tpG);
+
+  panelToggle("copyClick", this.copyClick);
+  panelToggle("copyLoop", this.copyLoop);
+  panelToggle("loopBH", this.loopBH);
+  panelToggle("loopHead", this.loopHead);
+  panelToggle("loopShield", this.loopShield);
+
+  panelToggle("inv", this.inv);
+  panelToggle("noclip", this.noclip);
+  panelToggle("god", this.god);
+  panelToggle("anti", this.anti);
+
+  panelToggle("msgAtv", this.msgAtv);
+  panelToggle("alertaAtivo", this.alertaAtivo);
+
+  panelToggle("bombInf", this.bombInf);
+  panelToggle("bombaAutoAtv", this.bombaAutoAtv);
+  panelToggle("flechaAtivo", this.flechaAtivo);
+
+  panelToggle("spawnAtv", this.spawnAtv);
+  panelToggle("loopGani", this.loopGani);
+
+  panelValue("HSpeed", this.velHead);
+  panelValue("SSpeed", this.velShield);
+  panelValue("MsgInput", this.msgTxt);
+  panelValue("FlechaQtd", this.flechaQtd);
+  panelValue("FlechaArea", this.flechaArea);
+  panelValue("QtdInput", this.spawnQtd);
+
+  panelText("StatHead", getHeadStatus());
+  panelText("StatShield", getShieldStatus());
+  panelText("StatGrudar", getGrudarStatus());
+  panelText("StatusAlerta", getAlertaStatus());
+  panelText("NomeEmoji", this.emojis[this.emojiIdx]);
+  panelText("NomeImg", this.imagens[this.idxImg]);
+  panelText("StatSpawn", getSpawnStatus());
+  panelText("StatusGani", getGaniStatus());
+
+  panelImage("PreviewEmoji", this.emojis[this.emojiIdx]);
+  sendpanelevent(this, "ganiSelected", this.ganiAtual);
+}
+
+function atualizarGanis() {
+  temp.ganis = {};
+
+  for (temp.n : npcs) {
+    if (temp.n.ani != NULL && temp.n.ani != "") {
+      if (temp.ganis.index(temp.n.ani) < 0) {
+        temp.ganis.add(temp.n.ani);
+      }
+    }
+  }
+
+  this.ganisDisponiveis = temp.ganis;
+
+  if (!this.panelReady) return;
+
+  sendpanelevent(this, "ganiClear", "");
+  for (temp.g = 0; temp.g < temp.ganis.size(); temp.g++) {
+    sendpanelevent(this, "ganiAdd", temp.ganis[temp.g]);
+  }
+  sendpanelevent(this, "ganiSelected", this.ganiAtual);
+}
+
+function handleToggle(controlId) {
+  if (controlId == "espPlayer") {
+    this.espPlayer = !this.espPlayer;
+    if (!this.espPlayer) {
+      for (i = 500; i < 600; i++) hideimg(i);
+      hideimg(800); hideimg(801);
+      if (this.somAtivo) { this.somAtivo = false; stopsound("sign.wav"); }
+    }
+    return;
+  }
+  if (controlId == "espInsetos") { this.espInsetos = !this.espInsetos; if (!this.espInsetos) for (i = 200; i < 500; i++) hideimg(i); return; }
+  if (controlId == "espLoot") { this.espLoot = !this.espLoot; if (!this.espLoot) for (i = 700; i < 800; i++) hideimg(i); return; }
+  if (controlId == "tpG") { this.tpG = !this.tpG; return; }
+  if (controlId == "copyClick") { this.copyClick = !this.copyClick; return; }
+  if (controlId == "copyLoop") { this.copyLoop = !this.copyLoop; return; }
+  if (controlId == "loopBH") { this.loopBH = !this.loopBH; this.idxBH = 1; if (!this.loopBH) { player.body = this.cOrg; player.head = this.hOrg; } return; }
+  if (controlId == "loopHead") { this.loopHead = !this.loopHead; if (this.velHead < 0.05) this.velHead = 0.05; if (!this.loopHead) player.head = this.hOrg; return; }
+  if (controlId == "loopShield") { this.loopShield = !this.loopShield; if (this.velShield < 0.05) this.velShield = 0.05; if (!this.loopShield) player.shieldimg = this.sOrg; return; }
+  if (controlId == "inv") { this.inv = !this.inv; return; }
+  if (controlId == "noclip") { this.noclip = !this.noclip; return; }
+  if (controlId == "god") { this.god = !this.god; return; }
+  if (controlId == "anti") { this.anti = !this.anti; setani(this.anti ? "bow_walk" : "bow_unwalk", ""); return; }
+  if (controlId == "msgAtv") { if (this.msgTxt == "") return; this.msgAtv = !this.msgAtv; this.tMsg = 0; return; }
+  if (controlId == "alertaAtivo") { this.alertaAtivo = !this.alertaAtivo; this.tAlerta = 0; return; }
+  if (controlId == "bombInf") { this.bombInf = !this.bombInf; if (this.bombInf) player.bombs = 99; return; }
+  if (controlId == "bombaAutoAtv") { this.bombaAutoAtv = !this.bombaAutoAtv; return; }
+  if (controlId == "flechaAtivo") { this.flechaAtivo = !this.flechaAtivo; return; }
+  if (controlId == "spawnAtv") { this.spawnAtv = !this.spawnAtv; return; }
+  if (controlId == "loopGani") { this.loopGani = !this.loopGani; return; }
+}
+
+function handleInput(controlId, value) {
+  if (controlId == "HSpeed") { this.velHead = max(0.05, float(value)); return; }
+  if (controlId == "SSpeed") { this.velShield = max(0.05, float(value)); return; }
+  if (controlId == "MsgInput") { this.msgTxt = value; return; }
+  if (controlId == "FlechaQtd") { this.flechaQtd = max(1, min(50, int(value))); return; }
+  if (controlId == "FlechaArea") { this.flechaArea = max(1, min(10, int(value))); return; }
+  if (controlId == "QtdInput") { this.spawnQtd = max(1, min(100, int(value))); return; }
+}
+
+function handleButton(controlId) {
+  if (controlId == "close") { this.panelReady = false; hidepanel(); return; }
+  if (controlId == "tpLoot") { for (n : npcs) { if (n.joinedclasses != NULL && ("loot_spot" in n.joinedclasses || "chest" in n.joinedclasses)) { player.x = n.x; player.y = n.y; break; } } return; }
+  if (controlId == "tpCity") { tpCity(); return; }
+  if (controlId == "grudar") { temp.distMin = 999; this.alvo = NULL; this.alvoNome = ""; for (temp.p : players) { if (temp.p != player) { temp.d = ((temp.p.x - player.x)^2 + (temp.p.y - player.y)^2)^0.5; if (temp.d < temp.distMin) { temp.distMin = temp.d; this.alvo = temp.p; this.alvoNome = temp.p.account; } } } this.grudado = (this.alvo != NULL); refreshPanel(); return; }
+  if (controlId == "desgrudar") { this.grudado = false; this.alvo = NULL; this.alvoNome = ""; refreshPanel(); return; }
+  if (controlId == "spawnClick") { for (i = 0; i < this.flechaQtd; i++) { ang = random(-3.14, 3.14); x = player.x + random(-8, 8); y = player.y + random(-8, 8); shoot(x, y, 2, ang, 0.5, 1, "ci_thrownobject", "sc_arrow_fire.png"); } return; }
+  if (controlId == "emojiMain") { player.showemoticon("emote_graal2924806_laughpoint.png"); return; }
+  if (controlId == "emojiPrev") { this.emojiIdx = (this.emojiIdx - 1 + this.emojis.size()) % this.emojis.size(); refreshPanel(); return; }
+  if (controlId == "emojiNext") { this.emojiIdx = (this.emojiIdx + 1) % this.emojis.size(); refreshPanel(); return; }
+  if (controlId == "emojiTest") { player.showemoticon(this.emojis[this.emojiIdx]); return; }
+  if (controlId == "imgPrev") { this.idxImg = (this.idxImg - 1 + this.imagens.size()) % this.imagens.size(); refreshPanel(); return; }
+  if (controlId == "imgNext") { this.idxImg = (this.idxImg + 1) % this.imagens.size(); refreshPanel(); return; }
+  if (controlId == "ganisRefresh") { atualizarGanis(); refreshPanel(); return; }
+  if (controlId == "ganiReset") { this.loopGani = false; setani(this.aniOriginal, ""); this.ganiAtual = ""; refreshPanel(); return; }
+}
+
+function handleSelect(controlId, value) {
+  if (controlId == "gani") { this.ganiAtual = value; setani(value, ""); refreshPanel(); }
+}
+
+function onMenu(event) {
+  if (event == NULL || event == "") return;
+  temp.args = event.tokenize("|"); temp.kind = temp.args[0]; temp.control = temp.args.size() > 1 ? temp.args[1] : ""; temp.value = temp.args.size() > 2 ? temp.args[2] : "";
+  for (temp.i = 3; temp.i < temp.args.size(); temp.i++) temp.value = temp.value @ "|" @ temp.args[temp.i];
+  if (temp.kind == "system" && temp.control == "ready") { this.panelReady = true; refreshPanel(); atualizarGanis(); return; }
+  if (temp.kind == "toggle") { handleToggle(temp.control); refreshPanel(); return; }
+  if (temp.kind == "input") { handleInput(temp.control, temp.value); refreshPanel(); return; }
+  if (temp.kind == "button") { handleButton(temp.control); refreshPanel(); return; }
+  if (temp.kind == "select") { handleSelect(temp.control, temp.value); refreshPanel(); }
+}
+
+function onMouseDown(b) {
+  if (b != "left") return;
+  if (this.copyClick) {
+    temp.pr = NULL; temp.dmin = 999;
+    for (p : players) { if (p != player) { d = ((p.x - player.x)^2 + (p.y - player.y)^2)^0.5; if (d < temp.dmin) { temp.dmin = d; temp.pr = p; } } }
+    if (temp.pr != NULL) { this.loopbody = temp.pr.body; this.loophead = temp.pr.head; this.loophat = temp.pr.attr[1]; player.body = this.loopbody; player.head = this.loophead; player.attr[1] = this.loophat; }
+  }
+  if (this.spawnAtv) {
+    oldGrav = gravity; gravity = 0; img = this.imagens[this.idxImg];
+    for (i = 0; i < this.spawnQtd; i++) shoot(mousex + random(-5, 5), mousey + random(-5, 5), 2, random(-3.14, 3.14), 0.2, 1, "ci_thrownobject", img);
+    gravity = oldGrav;
+  }
+}
+
+function onTimeout() {
+  if (this.copyLoop && this.loopbody != "") { player.body = this.loopbody; player.head = this.loophead; player.attr[1] = this.loophat; }
+  if (this.loopGani && this.ganiAtual != "") setani(this.ganiAtual, "");
+  if (this.inv) { player.body = ""; player.head = ""; player.nick = ""; setani("hiddenstill", ""); setcoloreffect(1,1,1,0); player.shadow = false; }
+  else { if (!this.loopBH && !this.copyLoop) { player.body = this.cOrg; player.head = this.hOrg; player.nick = this.nOrg; } setcoloreffect(1,1,1,1); player.shadow = true; }
+  if (this.god) { player.isinvincible = true; player.isinvincible2 = true; player.hearts = 100; player.ap = 100; } else { player.isinvincible = false; player.isinvincible2 = false; }
+  if (this.noclip) { dx = 0; dy = 0; if (keydown(0)) dy -= 1.5; if (keydown(1)) dx -= 1.5; if (keydown(2)) dy += 1.5; if (keydown(3)) dx += 1.5; if (dx != 0 || dy != 0) { player.x += dx; player.y += dy; if (onwall(player.x, player.y)) { player.x -= dx * 0.5; player.y -= dy * 0.5; } } }
+  if (this.anti) setani("bow_walk", "");
+  if (this.grudado && this.alvo != NULL) { player.x = this.alvo.x; player.y = this.alvo.y; }
+  if (this.tpG) { for (n : npcs) { if (n.joinedclasses != NULL && "gralatstouchsme" in n.joinedclasses) { player.x = n.x; player.y = n.y; break; } } }
+  if (this.bombInf) player.bombs = 99;
+  if (this.bombaAutoAtv) { this.tBomba += 0.05; if (this.tBomba >= 1.5) { criarExplosao(player.x, player.y); this.tBomba = 0; } } else this.tBomba = 0;
+  if (this.flechaAtivo) { for (i = 0; i < this.flechaQtd; i++) { ang = random(-3.14, 3.14); x = player.x + random(-this.flechaArea, this.flechaArea); y = player.y + random(-this.flechaArea, this.flechaArea); shoot(x, y, 2, ang, 0.5, 1, "ci_thrownobject", "sc_arrow_fire.png"); } }
+  if (this.msgAtv && this.msgTxt != "") { this.tMsg += 0.05; if (this.tMsg >= 0.3) { player.chat = this.msgTxt; this.tMsg = 0; } }
+  if (this.alertaAtivo) { this.tAlerta += 0.05; if (this.tAlerta >= 2.0) { setani("era_blade-fashion-buzzer-on", ""); this.tAlerta = 0; } }
+  if (this.loopHead) { this.tHead += 0.05; if (this.tHead >= this.velHead) { player.head = "head" @ this.idxHead @ ".png"; this.idxHead = (this.idxHead % 30) + 1; this.tHead = 0; panelText("StatHead", getHeadStatus()); } }
+  if (this.loopShield && this.shields.size() > 0) { this.tShield += 0.05; if (this.tShield >= this.velShield) { player.shieldimg = this.shields[this.idxShield]; this.idxShield = (this.idxShield + 1) % this.shields.size(); this.tShield = 0; panelText("StatShield", getShieldStatus()); } }
+  if (this.loopBH) { this.tBH += 0.05; if (this.tBH >= 0.15) { player.body = "body" @ this.idxBH @ ".png"; player.head = "head" @ this.idxBH @ ".png"; this.idxBH = (this.idxBH % 30) + 1; this.tBH = 0; } }
+
+  if (this.espPlayer) {
+    for (i = 500; i < 700; i++) hideimg(i); hideimg(800); hideimg(801);
+    idx = 500; contVerde = 0; adminPerto = false; adminNome = "";
+    for (p : players) {
+      if (p == player) continue;
+      temp.isAdmin = isAdmin(p); temp.dx = p.x - player.x; temp.dy = p.y - player.y; temp.dist = (temp.dx*temp.dx + temp.dy*temp.dy)^0.5;
+      if (temp.isAdmin) {
+        adminPerto = true; adminNome = p.account;
+        if (!this.somAtivo) { this.somAtivo = true; play("sign.wav"); }
+        p.alpha = 0.75; p.zoom = 1; p.attr[30] = "";
+        DrawLine(idx, player.x+1.5, player.y+1.5, p.x+1, p.y+1, 0.2, 1,0,0,0.9);
+        showtext(idx+1, p.x, p.y-1.2, "Arial", "c", "STAFF | " @ p.account @ " [" @ int(temp.dist) @ "m]");
+        changeimgcolors(idx+1, 1,0,0,1); changeimgzoom(idx+1,0.7); changeimgvis(idx+1,4);
+        idx+=2;
+      } else if (contVerde < 4) {
+        DrawLine(idx, player.x+1.5, player.y+1.5, p.x+1, p.y+1, 0.15, 0,1,0,0.9);
+        idx+=2;
+      }
+    }
+    if (adminPerto) { this.tempoSom+=0.05; if (this.tempoSom>=0.2) { this.tempoSom=0; if (this.somAtivo) play("sign.wav"); } pisca=0.5+0.5*sin(timevar2*8); showimg(800,"dc_icon_exclaim.png",screenwidth/2-130,screenheight/2-50); changeimgcolors(800,1,pisca,pisca,1); changeimgzoom(800,0.7); changeimgvis(800,4); showtext(801,screenwidth/2-60,screenheight/2-40,"Arial","bc","CUIDADO STAFF: " @ adminNome); changeimgcolors(801,1,pisca,pisca,1); changeimgvis(801,4); changeimgzoom(801,1.1); }
+    else { if (this.somAtivo) { this.somAtivo = false; stopsound("sign.wav"); } }
+  } else { if (this.somAtivo) { this.somAtivo = false; stopsound("sign.wav"); } }
+
+  if (this.espInsetos) {
+    for (i = 200; i < 500; i++) hideimg(i);
+    for (ni : npcs) {
+      if (ni.bugid != nil && ni.ani != "") {
+        temp.dx = ni.x - player.x; temp.dy = ni.y - player.y; temp.dist = (temp.dx*temp.dx + temp.dy*temp.dy)^0.5;
+        if (temp.dist < 120) {
+          DrawLine(200, player.x+1.5, player.y+1.5, ni.x+1, ni.y+1, 0.08, 1,1,0,0.6);
+          temp.ratio = (temp.dist > 12.5) ? (10/temp.dist) : 0.8;
+          showtext(201, player.x+1.5+(temp.dx*temp.ratio), player.y+1.5+(temp.dy*temp.ratio), "Arial", "b", int(temp.dist) @ "m");
+          changeimgcolors(201, 1,1,0,1); changeimgzoom(201,0.6); changeimgvis(201,4);
+        }
+      }
+    }
+  }
+
+  if (this.espLoot) {
+    for (i = 700; i < 800; i++) hideimg(i);
+    for (n : npcs) {
+      if (n.joinedclasses != nil && ("loot_spot" in n.joinedclasses || "chest" in n.joinedclasses) && ((n.x-player.x)^2 + (n.y-player.y)^2)^0.5 < 100) {
+        DrawLine(700, player.x+1.5, player.y+1.5, n.x+1, n.y+1, 0.1, 0,0.5,1,0.7);
+        showtext(701, n.x+0.5, n.y-1, "Arial", "b", "LOOT");
+        changeimgcolors(701, 0,0.5,1,1); changeimgzoom(701,0.6);
+        break;
+      }
+    }
+  }
+
+  setTimer(0.05);
+}
